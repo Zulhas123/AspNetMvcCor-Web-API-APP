@@ -1,0 +1,42 @@
+﻿@model Project_08.Models.CarOrderDetails
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>
+                    CarOrderId
+                </th>
+                <th>
+                    Car
+                </th>
+                <th>
+                    QTY
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CarOrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Car.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QTY)
+                </td>
+                <td>
+                    @Html.ActionLink("Select", "getRelatedOrder", new { OrderId = item.Id }, new { @class = "btn" })|
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>

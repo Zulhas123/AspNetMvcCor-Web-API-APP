@@ -1,0 +1,181 @@
+﻿
+@{
+    ViewData["Title"] = "MultipleDataInsert";
+}
+
+
+@{
+    ViewData["Title"] = "MultipleDataInsert";
+}
+
+@model Project_08.Models.CarType
+
+@{
+    ViewData["Title"] = "MultipleDataInsert";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<br />
+<h3 class="text-center">Insert List or Array By JSON</h3>
+<br />
+<h1 class="text-center">Multiple Data Insert To Subject Table</h1>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Insert List or Array By JSON</title>
+</head>
+<body>
+    <div class="container">
+        <h6>Subject Name :</h6>  <input type="text" id="Cartype1" />  <br /> <br />
+
+
+
+        <input type="button" class="btn btn-primary" id="btnUpdateUserDetail" value="Add" onclick="AddValueToList();" />
+
+        <input type="button" class="btn btn-success" id="btnUpdateUserDetailEdit" value="Save" onclick="EditValueToList();" />
+
+        <br /> <br />
+        <div class="col-lg-12">
+            <table id="infoTable" class="table">
+                <thead class="table-dark">
+                    <tr>
+                        <th> Id </th>
+                        <th> Name </th>
+
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <br /> <br /> <br />
+        <input type="button" class="btn btn-primary" id="btnUpdateSubjectDetail" value="Insert Data" onclick="UpdateSubjectDetail();" />
+
+
+    </div>
+</body>
+</html>
+
+
+
+<script lang="en" type="text/javascript">
+
+    var Id = 0;
+    var carTypeList = [];
+    function AddValueToList() {
+
+        var n = document.getElementById("Cartype1").value;
+
+
+        if (n == "") {
+            alert("Input data can not empty");
+            return false;
+        }
+
+        Id = 0;
+        var CarType = {};
+        CarType["Id"] = carTypeList.length + 1;
+        CarType["Cartype1"] = document.getElementById("Cartype1").value;
+        carTypeList.push(CarType);
+        fillTable();
+
+
+    }
+
+    function fillTable() {
+        $('#infoTable > tbody').empty();
+
+        carTypeList.forEach(function (val) {
+            $('#infoTable > tbody:last-child').append('<tr><td>' + val.Id + '</td><td>' + val.Cartype1 + '</td><td><input type="button" class="btn btn-warning" value="Edit" onclick="editPre(' + val.Id + ')"> | <input type="button" class="btn btn-danger"  value="Delete" onclick="tempDelete(' + val.Id + ')" /></td></tr>');
+        })
+
+    }
+
+
+    function EditValueToList() {
+
+        for (var i = carTypeList.length; i--;) {
+            if (carTypeList[i].Id === Id) {
+                carTypeList[i].Cartype1 = document.getElementById("Cartype1").value;
+                break;
+            }
+        }
+
+        fillTable();
+
+    }
+
+    function editPre(Id) {
+        for (var i = carTypeList.length; i--;) {
+            if (carTypeList[i].Id === Id) {
+                Id = Id;
+                document.getElementById("Cartype1").value = carTypeList[i].Cartype1;
+                break;
+            }
+        }
+
+
+    }
+
+
+    function tempDelete(Id) {
+        remove(carTypeList, Id);
+        fillTable();
+    }
+
+    function remove(arr, item) {
+        for (var i = arr.length; i--;) {
+            if (arr[i].Id === item) {
+                arr.splice(i, 1);
+            }
+        }
+        for (var i = 0; i < arr.length; i++) {
+            arr[i].Id = i + 1;
+        }
+
+    }
+
+
+    function UpdateSubjectDetail() {
+        var subjectJson = JSON.stringify(carTypeList);
+
+        console.log(getReportColumnsParams)
+
+        var getReportColumnsParams = { "subjectJson": subjectJson };
+
+         console.log(getReportColumnsParams)
+
+        alert("ok");
+        $.ajax({
+            type: "POST",
+            url: '/CarTypes/MultipleDataInsert',
+            data: getReportColumnsParams,
+            success: function (result) {
+                alert(result);
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+                alert("Error has occurred..");
+            }
+        });
+
+
+        carTypeList = [];
+        document.getElementById("Cartype1").value = '';
+        fillTable();
+    }
+
+
+
+
+</script>
+
+
+
